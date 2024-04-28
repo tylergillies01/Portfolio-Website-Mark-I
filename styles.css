@@ -1,0 +1,11 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+
+/* This is for the canvas */
+#board {
+    background-color: antiquewhite;
+    border-bottom: 1px solid black;
+}
