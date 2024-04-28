@@ -20,3 +20,8 @@ let sprite = {
 
 // Now have a function for when the page loads
 // this is going to initialize the window
+window.onload = function(){
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
+}
