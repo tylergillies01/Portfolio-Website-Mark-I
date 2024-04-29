@@ -48,6 +48,8 @@ let velocityY = 0;  // currently grounded
 let gravity = 0.4
 
 
+
+
 let gameOver = false;
 let score = 0;
 
@@ -83,15 +85,23 @@ window.onload = function(){
     spike2Img.src = "Assets/2spikes.png"
     spike3Img.src = "Assets/3spikes.png"
 
+    // initialize the Play button and add an event listener to start the game
+    playButton = document.getElementById("playButton");
+    playButton.addEventListener("click", function(){
+        startGame();
+        playButton.style.display = "none";
+    });
+}
 
-
+function startGame(){
     requestAnimationFrame(updateScreen);
     setInterval(generateSpike, 1000);  // generate a new spike every second
 
     // event listener
     document.addEventListener("keydown", spriteJump);
-
 }
+
+
 
 // update the screeen every frame
 function updateScreen(){
@@ -107,12 +117,13 @@ function updateScreen(){
 
 
     // display the score to the screen
-    context.fillStyle = "blue";
+    context.fillStyle = "black";
     context.font = "bold 20px Arial";
     context.textAlign = "left";
     context.textBaseline = 'middle';
     context.fillText(score, 20, 20);
-
+    // add to the score
+    score += 1;
 
     //update the sprite
     velocityY += gravity;
@@ -126,15 +137,14 @@ function updateScreen(){
         curr.x += velocityX;
         context.drawImage(curr.img, curr.x, curr.y, curr.width, curr.height);
         
-        // add to the score
-        score += 1;
+        
         // now detect collison
         if (detectCollision(sprite, curr)){
             gameOver = true;
             
         }
     }
-}
+}   
 
 
 function spriteJump(e){
