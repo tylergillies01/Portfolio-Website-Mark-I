@@ -1,6 +1,6 @@
 // TODO:
 // need to fix the sprite size in the front
-// need to add scoring
+// need a restart game button
 
 
 
@@ -84,6 +84,7 @@ window.onload = function(){
     spike3Img.src = "Assets/3spikes.png"
 
 
+
     requestAnimationFrame(updateScreen);
     setInterval(generateSpike, 1000);  // generate a new spike every second
 
@@ -95,7 +96,7 @@ window.onload = function(){
 // update the screeen every frame
 function updateScreen(){
     requestAnimationFrame(updateScreen);
-
+    
     if (gameOver){
         return;
     }  // so that it stops when the game has ended
@@ -103,6 +104,15 @@ function updateScreen(){
 
     // reset the canvas
     context.clearRect(0,0,board.width,board.height);
+
+
+    // display the score to the screen
+    context.fillStyle = "blue";
+    context.font = "bold 20px Arial";
+    context.textAlign = "left";
+    context.textBaseline = 'middle';
+    context.fillText(score, 20, 20);
+
 
     //update the sprite
     velocityY += gravity;
@@ -115,7 +125,9 @@ function updateScreen(){
         let curr = spikeArr[i];
         curr.x += velocityX;
         context.drawImage(curr.img, curr.x, curr.y, curr.width, curr.height);
-
+        
+        // add to the score
+        score += 1;
         // now detect collison
         if (detectCollision(sprite, curr)){
             gameOver = true;
@@ -183,4 +195,8 @@ function detectCollision(a, b){
         a.x + a.width > b.x &&
         a.y < b.y + b.height &&
         a.y + a.height > b.y;
+}
+
+function restartGame(){
+    gameOver = false;
 }
