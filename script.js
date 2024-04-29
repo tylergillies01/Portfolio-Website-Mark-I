@@ -85,6 +85,9 @@ window.onload = function(){
 function updateScreen(){
     requestAnimationFrame(updateScreen);
 
+    // reset the canvas
+    context.clearRect(0,0,board.width,board.height);
+
     //update the sprite
     context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
 
@@ -92,6 +95,7 @@ function updateScreen(){
     // need to loop through the array of spikes
     for (let i = 0; i < spikeArr.length; i++){
         let curr = spikeArr[i];
+        curr.x += velocityX;
         context.drawImage(curr.img, curr.x, curr.y, curr.width, curr.height);
     }
 }
