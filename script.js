@@ -53,6 +53,7 @@ window.onload = function(){
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
+    
 
     context = board.getContext("2d"); // this will be used to draw on the board
 
@@ -62,6 +63,7 @@ window.onload = function(){
     // Add the Sprite
     spriteImg = new Image();
     spriteImg.src = "Assets/80x48Wolf_Run.gif";
+    
     spriteImg.onload = function(){
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
     }
@@ -107,6 +109,12 @@ function updateScreen(){
         let curr = spikeArr[i];
         curr.x += velocityX;
         context.drawImage(curr.img, curr.x, curr.y, curr.width, curr.height);
+
+        // now detect collison
+        if (detectCollision(sprite, curr)){
+            gameOver = true;
+            
+        }
     }
 }
 
@@ -118,7 +126,7 @@ function spriteJump(e){
 
     // need to listen for key events
     if (e.code == "Space" && sprite.y == playerY){
-        velocityY = -10;
+        velocityY = -8;
     }
 
 }
@@ -161,4 +169,12 @@ function generateSpike(){
     if (spikeArr.length > 7){
         spikeArr.shift();
     }
+}
+
+
+function detectCollision(a, b){
+    return a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y;
 }
