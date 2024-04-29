@@ -27,7 +27,7 @@ spike2Width = 64;
 spike3Width = 96;
 
 spikeHeight = 32;
-spikeX = 600;
+spikeX = 700;
 spikeY = boardHeight - spikeHeight;
 
 // Now set  up the images of of spikes
@@ -37,7 +37,7 @@ let spike3Img;
 
 
 // Now initialize the physics
-let velocityX = -8;  // moving right to left
+let velocityX = -6;  // moving right to left
 let velocityY = 0;  // currently grounded
 let gravity = 0.4
 
@@ -79,16 +79,26 @@ window.onload = function(){
     requestAnimationFrame(updateScreen);
     setInterval(generateSpike, 1000);  // generate a new spike every second
 
+    // event listener
+    document.addEventListener("keydown", spriteJump);
+
 }
 
 // update the screeen every frame
 function updateScreen(){
     requestAnimationFrame(updateScreen);
 
+    if (gameOver){
+        return;
+    }  // so that it stops when the game has ended
+
+
     // reset the canvas
     context.clearRect(0,0,board.width,board.height);
 
     //update the sprite
+    velocityY += gravity;
+    sprite.y = Math.min(sprite.y + velocityY, playerY);  // apply gravity but make sure we dont go past the ground
     context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
 
     // update the spikes
@@ -101,7 +111,25 @@ function updateScreen(){
 }
 
 
+function spriteJump(e){
+    if (gameOver){
+        return;
+    }  // so that it stops when the game has ended
+
+    // need to listen for key events
+    if (e.code == "Space" && sprite.y == playerY){
+        velocityY = -10;
+    }
+
+}
+
+
 function generateSpike(){
+    if (gameOver){
+        return;
+    }  // so that it stops when the game has ended
+
+
     // make a struct for spike
     spike = {
         img : null,
@@ -126,5 +154,11 @@ function generateSpike(){
         spike.img = spike1Img;
         spike.width = spike1Width;
         spikeArr.push(spike);
+    }
+
+
+    // need to clean out the array of cactuses so we dont use too much memory
+    if (spikeArr.length > 7){
+        spikeArr.shift();
     }
 }
