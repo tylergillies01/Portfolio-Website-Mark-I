@@ -1,7 +1,13 @@
+// TODO:
+// need to fix the sprite size in the front
+// need to add scoring
+
+
+
 // Set up intial variables
 
 // Canvas variables
-let boardHeight = 300;
+let boardHeight = 256;
 let boardWidth = 700;
 let context; // this is going to be used to draw on the board
 
