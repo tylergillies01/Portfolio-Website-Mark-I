@@ -135,7 +135,18 @@ function updateScreen(){
     //update the sprite
     velocityY += gravity;
     sprite.y = Math.min(sprite.y + velocityY, playerY);  // apply gravity but make sure we dont go past the ground
+
+
+    // check whether the sprite is in the air
+    // if it is, change to the jump animation, if not, run animation
+    if (sprite.y == playerY && gameOver == false){
+        spriteImg.src = "Assets/wolf_run.png";
+    }
+    else if (sprite.y != playerY && gameOver == false){
+        spriteImg.src = "Assets/wolf_jump.png";
+    }
     context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
+
 
     // update the spikes
     // need to loop through the array of spikes
@@ -147,11 +158,18 @@ function updateScreen(){
         
         // now detect collison
         if (detectCollision(sprite, curr)){
+            
             gameOver = true;
             playButton.style.display = "block";
+
             clearInterval(intervalID);
             window.cancelAnimationFrame(requestID);
+
+            // change the sprite to dead by clearing current and reseting
+            context.clearRect(sprite.x, sprite.y, sprite.width, sprite.height);
+            spriteImg.src = "Assets/wolf_dead.png";
             
+            context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
             
         }
     }
@@ -167,7 +185,7 @@ function spriteJump(e){
     if (e.code == "Space" && sprite.y == playerY){
         velocityY = -8;
     }
-
+    
 }
 
 
@@ -197,7 +215,7 @@ function generateSpike(){
         spike.width = spike2Width;
         spikeArr.push(spike);
     }
-    else if (chance > 0.5){
+    else if (chance > 0.4){
         spike.img = spike1Img;
         spike.width = spike1Width;
         spikeArr.push(spike);
