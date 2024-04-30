@@ -14,19 +14,22 @@ body {
 }
 
 #playButton {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
+    position: relative;
+    top: 10px; /* Adjust this value to set the desired distance below the canvas */
+    display: block;
+    margin: 0 auto; /* Center the button horizontally */
     width: 150px;
     height: 50px;
-
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: bold;
     text-align: center;
     font-size: medium;
-
     border-radius: 20px;
 
+}
+
+#instructions {
+    position: relative;
+    margin-top: 20px; /* Optional: Add some margin between the button and instructions */
+    text-align: center;
 }
