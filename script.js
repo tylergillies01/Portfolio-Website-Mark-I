@@ -53,7 +53,8 @@ let gravity = 0.4
 let gameOver = false;
 let score = 0;
 
-
+let intervalID;
+let requestID;
 
 // Now have a function for when the page loads
 // this is going to initialize the window
@@ -86,28 +87,40 @@ window.onload = function(){
     spike3Img.src = "Assets/3spikes.png"
 
     // initialize the Play button and add an event listener to start the game
-    playButton = document.getElementById("playButton");
+    let playButton = document.getElementById("playButton");
     playButton.addEventListener("click", function(){
-        startGame();
+        clearInterval(intervalID);
+        console.log("!!!!!!!" + intervalID);
         playButton.style.display = "none";
+        startGame();
+        
     });
 }
 
 function startGame(){
+    gameOver = false;
+    score = 0;
+    spikeArr = [];
+    
     requestAnimationFrame(updateScreen);
-    setInterval(generateSpike, 1000);  // generate a new spike every second
+    intervalID = setInterval(generateSpike, 1000);  // generate a new spike every second
 
     // event listener
     document.addEventListener("keydown", spriteJump);
+
+    //TESTING
+    console.log(intervalID);
 }
 
 
 
 // update the screeen every frame
 function updateScreen(){
-    requestAnimationFrame(updateScreen);
+    console.log("UPDATE");
+    requestID = requestAnimationFrame(updateScreen);
     
     if (gameOver){
+        playButton.style.display = "block";
         return;
     }  // so that it stops when the game has ended
 
@@ -141,6 +154,10 @@ function updateScreen(){
         // now detect collison
         if (detectCollision(sprite, curr)){
             gameOver = true;
+            playButton.style.display = "block";
+            clearInterval(intervalID);
+            window.cancelAnimationFrame(requestID);
+            
             
         }
     }
