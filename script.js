@@ -1,7 +1,5 @@
 // TODO:
 // need to fix the sprite size in the front
-// need a restart game button
-
 
 
 // Set up intial variables
@@ -48,11 +46,12 @@ let velocityY = 0;  // currently grounded
 let gravity = 0.4
 
 
-
-
 let gameOver = false;
 let score = 0;
 
+// These will fix the problem of the game speeding up on repeated playthroughs
+// without clearing the interval and canceling the animationrequests between games, they will start running concurrently, thus getting faster
+// particularly the animationframes
 let intervalID;
 let requestID;
 
@@ -90,40 +89,35 @@ window.onload = function(){
     let playButton = document.getElementById("playButton");
     playButton.addEventListener("click", function(){
         clearInterval(intervalID);
-        console.log("!!!!!!!" + intervalID);
         playButton.style.display = "none";
         startGame();
-        
     });
 }
 
+// Main function for the game
 function startGame(){
+    // reset game variables
     gameOver = false;
     score = 0;
     spikeArr = [];
     
-    requestAnimationFrame(updateScreen);
+    // start the animation and spike generation
+    requestID = requestAnimationFrame(updateScreen);
     intervalID = setInterval(generateSpike, 1000);  // generate a new spike every second
 
-    // event listener
+    // event listener for jumping
     document.addEventListener("keydown", spriteJump);
-
-    //TESTING
-    console.log(intervalID);
 }
-
 
 
 // update the screeen every frame
 function updateScreen(){
-    console.log("UPDATE");
     requestID = requestAnimationFrame(updateScreen);
     
     if (gameOver){
         playButton.style.display = "block";
         return;
-    }  // so that it stops when the game has ended
-
+    }
 
     // reset the canvas
     context.clearRect(0,0,board.width,board.height);
