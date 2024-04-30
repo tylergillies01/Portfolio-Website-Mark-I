@@ -1,6 +1,7 @@
 body {
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
+    background-color: antiquewhite;
 }
 
 
@@ -11,6 +12,7 @@ body {
     border-bottom: 1px solid black;
     
     background-image: url("Assets/fantasy-512-x-256_full.png");
+
 }
 
 #playButton {
@@ -33,3 +35,4 @@ body {
     margin-top: 20px; /* Optional: Add some margin between the button and instructions */
     text-align: center;
 }
+

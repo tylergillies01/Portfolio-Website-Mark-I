@@ -103,10 +103,18 @@ function startGame(){
     
     // start the animation and spike generation
     requestID = requestAnimationFrame(updateScreen);
-    intervalID = setInterval(generateSpike, 1000);  // generate a new spike every second
+    intervalID = setInterval(generateSpike, 1300);  // generate a new spike every second
 
     // event listener for jumping
     document.addEventListener("keydown", spriteJump);
+
+
+    //SOUNDS
+    // start music
+    playMusic();
+
+    // Event listener to pause the music when the tab loses focus
+    document.addEventListener("visibilitychange", pauseMusicOnBlur);
 }
 
 
@@ -158,7 +166,6 @@ function updateScreen(){
         
         // now detect collison
         if (detectCollision(sprite, curr)){
-            
             gameOver = true;
             playButton.style.display = "block";
 
@@ -171,6 +178,7 @@ function updateScreen(){
             
             context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
             
+            pauseMusic();
         }
     }
 }   
@@ -180,12 +188,16 @@ function spriteJump(e){
     if (gameOver){
         return;
     }  // so that it stops when the game has ended
-
+    
     // need to listen for key events
     if (e.code == "Space" && sprite.y == playerY){
+        // Play the jump sound only if we are currently on the ground
+        if (sprite.y == playerY){
+            playJumpSound();
+        }
+
         velocityY = -8;
     }
-    
 }
 
 
@@ -205,17 +217,17 @@ function generateSpike(){
     }  // we dont know the image or the width yet
 
     let chance = Math.random();
-    if (chance > 0.9){
+    if (chance > 0.8){
         spike.img = spike3Img;
         spike.width = spike3Width;
         spikeArr.push(spike);
     }
-    else if (chance > 0.7){
+    else if (chance > 0.6){
         spike.img = spike2Img;
         spike.width = spike2Width;
         spikeArr.push(spike);
     }
-    else if (chance > 0.4){
+    else if (chance > 0.25){
         spike.img = spike1Img;
         spike.width = spike1Width;
         spikeArr.push(spike);
@@ -236,6 +248,39 @@ function detectCollision(a, b){
         a.y + a.height > b.y;
 }
 
-function restartGame(){
-    gameOver = false;
+function pauseMusic() {
+    var music = document.getElementById("backgroundMusic");
+    music.pause();
 }
+
+// Play the music
+function playMusic() {
+    var music = document.getElementById("backgroundMusic");
+    music.volume = 0.6;
+    music.play();
+}
+
+
+function playJumpSound(){
+    var music = document.getElementById("jumpSound");
+    music.volume = 0.2;
+    // this makes it reset each time
+    music.currentTime = 0;
+    music.play();
+}
+
+// Function to pause the music when the tab is not visible
+function pauseMusicOnBlur() {
+    if (document.hidden) {
+        var music = document.getElementById("backgroundMusic");
+        music.pause();
+    }
+    else{
+        if (!gameOver){
+            var music = document.getElementById("backgroundMusic");
+            music.play();
+        }
+        
+    }
+}
+
