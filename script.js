@@ -10,8 +10,8 @@ let boardWidth = 700;
 let context; // this is going to be used to draw on the board
 
 // Player Variables
-let playerH = 48;
-let playerW = 80;
+let playerH = 26;
+let playerW = 43;
 let playerX = 50;
 let playerY = boardHeight - playerH;
 
@@ -70,7 +70,7 @@ window.onload = function(){
 
     // Add the Sprite
     spriteImg = new Image();
-    spriteImg.src = "Assets/80x48Wolf_Run.gif";
+    spriteImg.src = "Assets/wolf_run.png";
     
     spriteImg.onload = function(){
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.width, sprite.height);
