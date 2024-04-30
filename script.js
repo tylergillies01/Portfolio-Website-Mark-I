@@ -55,6 +55,8 @@ let score = 0;
 let intervalID;
 let requestID;
 
+let checkbox;
+
 // Now have a function for when the page loads
 // this is going to initialize the window
 window.onload = function(){
@@ -62,7 +64,6 @@ window.onload = function(){
     board.height = boardHeight;
     board.width = boardWidth;
     
-
     context = board.getContext("2d"); // this will be used to draw on the board
 
     // context.fillStyle="red";
@@ -92,6 +93,10 @@ window.onload = function(){
         playButton.style.display = "none";
         startGame();
     });
+
+    // initialize the sound checkbox
+    checkbox = document.getElementById("isSound");
+    
 }
 
 // Main function for the game
@@ -112,9 +117,20 @@ function startGame(){
     //SOUNDS
     // start music
     playMusic();
+    
 
     // Event listener to pause the music when the tab loses focus
     document.addEventListener("visibilitychange", pauseMusicOnBlur);
+
+    // Event listener for changing the sound checkbox
+    checkbox.addEventListener("change", playMusic);
+
+    //this one fixes the problem of after pressing the box, the space key can no longer toggle it 
+    checkbox.addEventListener("keydown", function(event) {
+        if (event.key === " ") {
+            event.preventDefault();
+        }
+    });
 }
 
 
@@ -162,7 +178,6 @@ function updateScreen(){
         let curr = spikeArr[i];
         curr.x += velocityX;
         context.drawImage(curr.img, curr.x, curr.y, curr.width, curr.height);
-        
         
         // now detect collison
         if (detectCollision(sprite, curr)){
@@ -248,6 +263,9 @@ function detectCollision(a, b){
         a.y + a.height > b.y;
 }
 
+
+
+// MUSIC
 function pauseMusic() {
     var music = document.getElementById("backgroundMusic");
     music.pause();
@@ -255,30 +273,37 @@ function pauseMusic() {
 
 // Play the music
 function playMusic() {
-    var music = document.getElementById("backgroundMusic");
-    music.volume = 0.6;
-    music.play();
+    if (!checkbox.checked && !gameOver){
+        var music = document.getElementById("backgroundMusic");
+        music.volume = 0.6;
+        music.play();
+    }
+    else{
+        pauseMusic();
+    }
+    
 }
 
 
 function playJumpSound(){
-    var music = document.getElementById("jumpSound");
-    music.volume = 0.2;
-    // this makes it reset each time
-    music.currentTime = 0;
-    music.play();
+    if (!checkbox.checked && !gameOver){
+        var music = document.getElementById("jumpSound");
+        music.volume = 0.2;
+        // this makes it reset each time
+        music.currentTime = 0;
+        music.play();
+    }
+    
 }
 
 // Function to pause the music when the tab is not visible
 function pauseMusicOnBlur() {
     if (document.hidden) {
-        var music = document.getElementById("backgroundMusic");
-        music.pause();
+        pauseMusic();
     }
     else{
         if (!gameOver){
-            var music = document.getElementById("backgroundMusic");
-            music.play();
+            playMusic();
         }
         
     }

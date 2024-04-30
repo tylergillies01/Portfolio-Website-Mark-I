@@ -36,3 +36,8 @@ body {
     text-align: center;
 }
 
+#isSound {
+    position: relative;
+    margin-top: 10px; /* Optional: Add some margin between the button and instructions */
+}
+
