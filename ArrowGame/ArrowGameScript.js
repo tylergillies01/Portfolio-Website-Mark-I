@@ -1,4 +1,6 @@
-
+// CURRENT OBJECTIVE:
+// create the "strike zone"
+// then make something happen when you press a button when an enemy is in the zone
 
 // Board variables
 let boardHeight = 600;
@@ -25,6 +27,11 @@ let enemy1Height = 50;
 let enemy1X = boardWidth/2;
 let enemy1Y = 0;
 
+// Hit zone variables
+let hitboxH = 200;
+let hitboxW = boardWidth;
+let hitboxX = 0;
+let hitboxY = spriteY - hitboxH;
 
 
 let requestID;
@@ -42,6 +49,10 @@ window.onload = function(){
     context.fillStyle="green";
     context.fillRect(spriteX, spriteY, spriteW, spriteH);
     
+    // setup the hitbox
+    context.fillStyle = "rgba(135, 206, 250, 0.5)";
+    context.fillRect(hitboxX, hitboxY, hitboxW, hitboxH);
+
 
     startGame();
 }
@@ -58,9 +69,13 @@ function updateScreen(){
     // reset the canvas
     context.clearRect(0,0,board.width,board.height);
 
+    // redraw sprite
     context.fillStyle="green";
     context.fillRect(spriteX, spriteY, spriteW, spriteH);
 
+    //redraw hitbox
+    context.fillStyle = "rgba(135, 206, 250, 0.5)";
+    context.fillRect(hitboxX, hitboxY, hitboxW, hitboxH);
     
     for (let i = 0; i < enemyArr.length; i++){
         let currEnemy = enemyArr[i];
