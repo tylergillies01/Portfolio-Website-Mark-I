@@ -1,22 +1,55 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600|Arvo:700");
+
+
 body {
-    font-family: 'Courier New', Courier, monospace;
     text-align: center;
-    background-color: antiquewhite;
+    background: #f0f0f0;
+
+    font-family: 'Source Sans Pro';
+    font-weight: 300;
+    color: #777;
+    line-height: 1.65em;
+    font-size: 15pt;
+    
 }
 
 
-#playButton {
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+
+
+/* Button */
+
+.button-container button {
+
+    
     position: relative;
-    top: 50px; /* Adjust this value to set the desired distance below the canvas */
-    display: block;
-    margin: 0 auto; /* Center the button horizontally */
+    margin-right: 10px;
+    margin-left: 10px;
     width: 250px;
     height: 100px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-weight: bold;
     text-align: center;
-    font-size: large;
-    border-radius: 10px;
 
+
+    background: #ed786a;
+    color: #fff !important;
+    text-transform: uppercase;
+    border-radius: 4px;
+    border: 0;
+    outline: 0;
+    font-size: 1em;
+    box-shadow: 0.125em 0.175em 0 0 rgba(0, 0, 0, 0.125);
+    font-weight: 700;
+    text-align: center;
+    font-size: 0.85em;
+    letter-spacing: 2px;
+    
 }
 
+button:hover{
+    background: #fd887a;
+}
