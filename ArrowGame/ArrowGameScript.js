@@ -1,6 +1,5 @@
 // CURRENT OBJECTIVE:
-// create the "strike zone"
-// then make something happen when you press a button when an enemy is in the zone
+// Change the event listener to only work when they press the correct key
 
 // Board variables
 let boardHeight = 600;
@@ -10,7 +9,7 @@ let context;
 // Player sprite variables
 let spriteH = 50;
 let spriteW = 30;
-let spriteX = boardWidth/2;
+let spriteX = boardWidth/2 - spriteW/2;
 let spriteY = boardHeight - spriteH;
 
 let sprite = {
@@ -22,9 +21,9 @@ let sprite = {
 
 //Enemy variables
 let enemyArr = [];
-let enemy1Width = 30;
-let enemy1Height = 50;
-let enemy1X = boardWidth/2;
+let enemy1Width = 50;
+let enemy1Height = 60;
+let enemy1X = boardWidth/2 - enemy1Width/2;
 let enemy1Y = 0;
 
 // Hit zone variables
@@ -57,6 +56,19 @@ window.onload = function(){
     // setup the hitbox
     context.fillStyle = "rgba(135, 206, 250, 0.5)";
     context.fillRect(hitboxX, hitboxY, hitboxW, hitboxH);
+
+    // setup enemies
+    leftImg = new Image();
+    leftImg.src = "Assets/left_arrow.png"
+
+    rightImg = new Image();
+    rightImg.src = "Assets/right_arrow.png"
+
+    upImg = new Image();
+    upImg.src = "Assets/up_arrow.png"
+
+    downImg = new Image();
+    downImg.src = "Assets/down_arrow.png"
 
 
     // event listener for hitting enemies
@@ -99,23 +111,23 @@ function updateScreen(){
 
     for (let i = 0; i < enemyArr.length; i++){
         let currEnemy = enemyArr[i];
-
+        //console.log(currEnemy.img);
         // check if the sprite is leaving the hitbox and should be removed
         if(!inHitbox(currEnemy)){
             enemyArr.shift();
             misses += 1;
             continue;
         }
-        currEnemy.y += 5;
-        context.fillStyle="red";
-        context.fillRect(currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
-        
+        currEnemy.y += 3;
+        //context.fillStyle="red";
+        //context.fillRect(currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
+        context.drawImage(currEnemy.img, currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
     }
     
 }
 
 
-function hitEnemy(){
+function hitEnemy(e){
     // get an array of the y coordinates of the enemies
     let coords = [];
     for(let i = 0; i < enemyArr.length; i++){
@@ -147,6 +159,22 @@ function generateEnemy(){
         img : null
     }
 
+
+    let randnum = Math.floor(Math.random() * 4) + 1;
+
+    if(randnum == 1){
+        enemy.img = leftImg;
+    }
+    else if (randnum == 2){
+        enemy.img = rightImg;
+    }
+    else if (randnum == 3){
+        enemy.img = upImg;
+    }
+    else if (randnum == 4){
+        enemy.img = downImg;
+    }
+    
     enemyArr.push(enemy);
 
     if (enemyArr.length > 5){
