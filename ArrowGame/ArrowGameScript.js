@@ -53,8 +53,9 @@ let intervalID;
 
 //this varibale is used to track if you were just hit
 // this fixes the problem of the hitbox not reacting well when you take damage
-let currentlyHit = false;
-
+let currentlyDamaged = false;
+// this one is the same but for mkaing the hitbox green on a good hit
+let goodHit = false;
 
 
 window.onload = function(){
@@ -122,8 +123,11 @@ function updateScreen(){
     context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
 
     //redraw hitbox
-    if(currentlyHit){
-        context.fillStyle = "rgba(139, 0, 0, 0.5)"
+    if(currentlyDamaged){
+        context.fillStyle = "rgba(200, 50, 50, 0.5)"
+    }
+    else if(goodHit){
+        greenhitbox();
     }
     else{
         context.fillStyle = "rgba(135, 206, 250, 0.5)";
@@ -197,15 +201,19 @@ function hitEnemy(e){
         if(e.key == "ArrowLeft" && arrowDirs[0] == "left"){
             //console.log("HIT");
             hits += 1;
+            greenhitbox();
         }
         else if(e.key == "ArrowRight" && arrowDirs[0] == "right"){
             hits += 1;
+            greenhitbox();
         }
         else if(e.key == "ArrowUp" && arrowDirs[0] == "up"){
             hits += 1;
+            greenhitbox();
         }
         else if(e.key == "ArrowDown" && arrowDirs[0] == "down"){
             hits += 1;
+            greenhitbox();
         }
         else{
             // MISS
@@ -309,11 +317,23 @@ function damageSprite(){
     }
 
     //redraw hitbox
-    currentlyHit = true;
-    context.fillStyle = "rgba(139, 0, 0, 0.5)"
+    currentlyDamaged = true;
+    context.fillStyle = "rgba(200, 50, 50, 0.5)"
     context.fillRect(hitboxX, hitboxY, hitboxW, hitboxH);
     setTimeout(() => {
-        currentlyHit = false;
+        currentlyDamaged = false;
     }, 300);
     
+}
+
+
+// helper function to make the hitbox go gree nto react to successful hits
+function greenhitbox(){
+    goodHit = true;
+
+    context.fillStyle = "rgba(144, 238, 144, 0.5)"
+    context.fillRect(hitboxX, hitboxY, hitboxW, hitboxH);
+    setTimeout(() => {
+        goodHit = false;
+    }, 200);
 }
