@@ -2,7 +2,7 @@
 // Change the event listener to only work when they press the correct key
 
 // Board variables
-let boardHeight = 600;
+let boardHeight = 700;
 let boardWidth = 600;
 let context;
 
@@ -29,8 +29,8 @@ let sprite = {
 
 //Enemy variables
 let enemyArr = [];
-let enemy1Width = 50;
-let enemy1Height = 60;
+let enemy1Width = 84;
+let enemy1Height = 81;
 let enemy1X = boardWidth/2 - enemy1Width/2;
 let enemy1Y = 0;
 
@@ -84,16 +84,16 @@ window.onload = function(){
 
     // setup enemies
     leftImg = new Image();
-    leftImg.src = "Assets/left_arrow.png"
+    leftImg.src = "Assets/left_arrow_v2.png"
 
     rightImg = new Image();
-    rightImg.src = "Assets/right_arrow.png"
+    rightImg.src = "Assets/right_arrow_v2.png"
 
     upImg = new Image();
-    upImg.src = "Assets/up_arrow.png"
+    upImg.src = "Assets/up_arrow_v2.png"
 
     downImg = new Image();
-    downImg.src = "Assets/down_arrow.png"
+    downImg.src = "Assets/down_arrow_v2.png"
 
 
     // event listener for hitting enemies
