@@ -1,5 +1,5 @@
 // CURRENT OBJECTIVE:
-// Change the event listener to only work when they press the correct key
+// change the hiotbox so that it counts as long as the arrow is touching
 
 // Board variables
 let boardHeight = 700;
@@ -34,6 +34,8 @@ let enemy1Height = 81;
 let enemy1X = boardWidth/2 - enemy1Width/2;
 let enemy1Y = 0;
 
+let enemySpeed = 3;
+
 // Hit zone variables
 let hitboxH = 150;
 let hitboxW = boardWidth;
@@ -57,6 +59,9 @@ let currentlyDamaged = false;
 // this one is the same but for mkaing the hitbox green on a good hit
 let goodHit = false;
 
+
+// tracks how long the game has gone in order to adjust difficulty
+let timePlayed = 0;
 
 window.onload = function(){
     // setup board
@@ -107,13 +112,14 @@ function startGame(){
 
     requestID = requestAnimationFrame(updateScreen);
     intervalID = setInterval(generateEnemy, 1000);
+
+    setInterval(countTime, 1000);
 }
 
 
 function updateScreen(){
     requestID = requestAnimationFrame(updateScreen);
 
-    
     // reset the canvas
     context.clearRect(0,0,board.width,board.height);
 
@@ -153,7 +159,7 @@ function updateScreen(){
             damageSprite();
             continue;
         }
-        currEnemy.y += 3;
+        currEnemy.y += setDifficulty();
         //context.fillStyle="red";
         //context.fillRect(currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
         context.drawImage(currEnemy.img, currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
@@ -336,4 +342,26 @@ function greenhitbox(){
     setTimeout(() => {
         goodHit = false;
     }, 200);
+}
+
+
+// helper function to track the time elapsed since starting the game
+function countTime(){
+    timePlayed+=1;
+}
+
+
+// helper function to adjust the difficulty/speed of the arrows based on the time elapsed 
+function setDifficulty(){
+    if(timePlayed < 10){
+        diff = 3;
+    }
+    else if(timePlayed < 20){
+        diff = 4;
+    }
+    else{
+        diff = 5;
+    }
+
+    return diff;
 }
