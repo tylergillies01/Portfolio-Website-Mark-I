@@ -1,7 +1,8 @@
 // CURRENT OBJECTIVE:
+// PROBLEM: if they just press all arrows at once it counts, need to make it so only the correct one works
 // add backgrounds and effects
 // score and score multipliers (ie combos and streaks)
-// maybe add multi arrows
+// 
 
 // Board variables
 let boardHeight = 700;
@@ -33,8 +34,10 @@ let sprite = {
 let enemyArr = [];
 let enemy1Width = 84;
 let enemy1Height = 81;
-let enemy1X = boardWidth/2 - enemy1Width/2;
-let enemy1Y = 0;
+let enemy2Width = 168;
+let enemy2Height = 81;
+let enemyX = boardWidth/2 - enemy1Width/2;
+let enemyY = 0;
 
 let enemySpeed = 3;
 
@@ -67,6 +70,10 @@ let timePlayed = 0;
 
 let gameOver = false;
 
+// tracks the currently pressed keys to check simultaneous presses
+const keysPressed = {};
+let checkTimeout;  // this fixes a problem with the multi presses not working
+
 window.onload = function(){
     // setup board
     board = document.getElementById("board");
@@ -81,8 +88,6 @@ window.onload = function(){
     spriteImg.onload = function(){
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
     }
-
-
 
 
     // setup the hitbox
@@ -102,9 +107,36 @@ window.onload = function(){
     downImg = new Image();
     downImg.src = "Assets/down_arrow_v2.png"
 
+    leftdownImg = new Image();
+    leftdownImg.src = "Assets/Multi-Arrows/leftdown_arrow.png"
+    leftrightImg = new Image();
+    leftrightImg.src = "Assets/Multi-Arrows/leftright_arrow.png"
+    leftupImg = new Image();
+    leftupImg.src = "Assets/Multi-Arrows/leftup_arrow.png"
+    downrightImg = new Image();
+    downrightImg.src = "Assets/Multi-Arrows/downright_arrow.png"
+    rightupImg = new Image();
+    rightupImg.src = "Assets/Multi-Arrows/rightup_arrow.png"
+    updownImg = new Image();
+    updownImg.src = "Assets/Multi-Arrows/updown_arrow.png"
+
 
     // event listener for hitting enemies
-    document.addEventListener("keydown", hitEnemy);
+    document.addEventListener('keydown', (event) => {
+        keysPressed[event.key] = true;
+    
+        // Clear previous timeout if any
+        if (checkTimeout) clearTimeout(checkTimeout);
+    
+        // Set a small delay to ensure all key presses are registered
+        checkTimeout = setTimeout(hitEnemy, 20);
+    });
+
+    // Event listener for keyup event
+    document.addEventListener('keyup', (event) => {
+        // Set the key as no longer pressed in the keysPressed object
+        keysPressed[event.key] = false;
+    });
 
     startGame();
 }
@@ -170,22 +202,22 @@ function updateScreen(){
 
 
 function hitEnemy(e){
-    if(e.key == "ArrowLeft"){
+    if(keysPressed["ArrowLeft"]){
         sprite.img = leftImgPlayer;
         spriteImg.src = sprite.img;
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
     }
-    else if(e.key == "ArrowRight"){
+    else if(keysPressed["ArrowRight"]){
         sprite.img = rightImgPlayer;
         spriteImg.src = sprite.img;
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
     }
-    else if(e.key == "ArrowUp"){
+    else if(keysPressed["ArrowUp"]){
         sprite.img = upImgPlayer;
         spriteImg.src = sprite.img;
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
     }
-    else if(e.key == "ArrowDown"){
+    else if(keysPressed["ArrowDown"]){
         sprite.img = downImgPlayer;
         spriteImg.src = sprite.img;
         context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
@@ -196,81 +228,131 @@ function hitEnemy(e){
     // check if the first one is inside the hitbox
     firstEnemy = enemyArr[0];
 
-    if (firstEnemy.y < spriteY && firstEnemy.y + firstEnemy.h > hitboxY){
-        // now check it was the correct key
-        if(e.key == "ArrowLeft" && firstEnemy.direction == "left"){
-            //console.log("HIT");
+    if (firstEnemy.y < spriteY && firstEnemy.y + firstEnemy.h > hitboxY) {
+        // Debugging
+        console.log('1) keysPressed:', keysPressed);
+        console.log('2) firstEnemy.direction:', firstEnemy.direction);
+
+        // Check the key and direction
+        if (isCorrectKey("ArrowLeft") && firstEnemy.direction == "left") {
             hits += 1;
             greenhitbox();
-
             playCoinSound();
-        }
-        else if(e.key == "ArrowRight" && firstEnemy.direction == "right"){
+        } else if (isCorrectKey("ArrowRight") && firstEnemy.direction == "right") {
             hits += 1;
             greenhitbox();
-
             playCoinSound();
-        }
-        else if(e.key == "ArrowUp" && firstEnemy.direction == "up"){
+        } else if (isCorrectKey("ArrowUp") && firstEnemy.direction == "up") {
             hits += 1;
             greenhitbox();
-
             playCoinSound();
-        }
-        else if(e.key == "ArrowDown" && firstEnemy.direction == "down"){
+        } else if (isCorrectKey("ArrowDown") && firstEnemy.direction == "down") {
             hits += 1;
             greenhitbox();
-
             playCoinSound();
-        }
-        else{
+        } else if (isCorrectKey("ArrowDown", "ArrowRight") && firstEnemy.direction == "downright") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else if (isCorrectKey("ArrowLeft", "ArrowDown") && firstEnemy.direction == "leftdown") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else if (isCorrectKey("ArrowLeft", "ArrowRight") && firstEnemy.direction == "leftright") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else if (isCorrectKey("ArrowLeft", "ArrowUp") && firstEnemy.direction == "leftup") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else if (isCorrectKey("ArrowRight", "ArrowUp") && firstEnemy.direction == "rightup") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else if (isCorrectKey("ArrowUp", "ArrowDown") && firstEnemy.direction == "updown") {
+            hits += 1;
+            greenhitbox();
+            playCoinSound();
+        } else {
             // MISS
             misses += 1;
             damageSprite();
         }
-        
+
         enemyArr.shift();
-        
-    }
-    else{
-        // MISS
-        enemyArr.shift();
-        misses += 1;
-        damageSprite();
     }
 }
 
 
+
 function generateEnemy(){
+    
+    let randnum = Math.floor(Math.random() * 14) + 1;
+
     let enemy = {
         h : enemy1Height,
         w : enemy1Width,
-        x : enemy1X,
-        y : enemy1Y,
+        x : enemyX,
+        y : enemyY,
         img : null,
         direction: null
     }
 
+    if(randnum >= 9){
+        enemy.h = enemy2Height
+        enemy.w = enemy2Width
+        enemy.x = boardWidth/2 - enemy.w/2;
 
-    let randnum = Math.floor(Math.random() * 4) + 1;
+    }
 
-    if(randnum == 1){
-        enemy.img = leftImg;
-        enemy.direction = "left";
+    switch (randnum) {
+        case (1):
+        case (2):
+            enemy.img = leftImg;
+            enemy.direction = "left";
+            break;
+        case (3):
+        case (4):
+            enemy.img = rightImg;
+            enemy.direction = "right";
+            break;
+        case (5):
+        case (6):
+            enemy.img = upImg;
+            enemy.direction = "up";
+            break;
+        case (7):
+        case (8):
+            enemy.img = downImg;
+            enemy.direction = "down";
+            break;
+        case (9):
+            enemy.img = leftdownImg;
+            enemy.direction = "leftdown";
+            break;
+        case (10):
+            enemy.img = leftrightImg;
+            enemy.direction = "leftright";
+            break;
+        case (11):
+            enemy.img = leftupImg;
+            enemy.direction = "leftup";
+            break;
+        case (12):
+            enemy.img = downrightImg;
+            enemy.direction = "downright";
+            break;
+        case (13):
+            enemy.img = rightupImg;
+            enemy.direction = "rightup";
+            break;
+        case (14):
+            enemy.img = updownImg;
+            enemy.direction = "updown";
+            break;
     }
-    else if (randnum == 2){
-        enemy.img = rightImg;
-        enemy.direction = "right";
-    }
-    else if (randnum == 3){
-        enemy.img = upImg;
-        enemy.direction = "up";
-    }
-    else if (randnum == 4){
-        enemy.img = downImg;
-        enemy.direction = "down";
-    }
-    
+
     enemyArr.push(enemy);
 
     if (enemyArr.length > 5){
@@ -360,10 +442,39 @@ function countTime(){
 // helper function to adjust the difficulty/speed of the arrows based on the time elapsed 
 function setDifficulty(){
     if(timePlayed % 10 == 0){
-        enemySpeed += 0.5;
+        enemySpeed += 0.3;
     }
     
 }
+
+// helper function to ensure only certain keys are pressd and no others
+// pass it the key you want it to be and it will check if that or those 2 are the only keys being pressed
+function isCorrectKey(key1, key2=null){
+    let key1Pressed = false;
+    let key2Pressed = false;
+    if(key2 == null){  //checking for single key
+        for(let i in keysPressed){
+            if(i !== key1 && keysPressed[i]){
+                return false;
+            }
+        }
+        return keysPressed[key1] === true;
+    }
+    else{ // checking for 2 keys
+        for(let i in keysPressed){
+            if (i === key1 && keysPressed[i]) {
+                key1Pressed = true;
+            } else if (i === key2 && keysPressed[i]) {
+                key2Pressed = true;
+            } else if (keysPressed[i]) {
+                // Another key is pressed, so return false
+                return false;
+            }
+        }
+        return key1Pressed && key2Pressed;
+    }
+}
+
 
 
 
@@ -388,3 +499,5 @@ function playHitSound(){
     }
     
 }
+
+
