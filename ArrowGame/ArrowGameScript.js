@@ -1,5 +1,4 @@
 // CURRENT OBJECTIVE:
-// add sounds
 // add backgrounds and effects
 // score and score multipliers (ie combos and streaks)
 // maybe add multi arrows
@@ -161,7 +160,8 @@ function updateScreen(){
             damageSprite();
             continue;
         }
-        currEnemy.y += setDifficulty();
+        
+        currEnemy.y += enemySpeed;
         
         context.drawImage(currEnemy.img, currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
     }
@@ -351,22 +351,18 @@ function greenhitbox(){
 // helper function to track the time elapsed since starting the game
 function countTime(){
     timePlayed+=1;
+
+    // adjust difficulty based on time played
+    setDifficulty();
 }
 
 
 // helper function to adjust the difficulty/speed of the arrows based on the time elapsed 
 function setDifficulty(){
-    if(timePlayed < 10){
-        diff = 3;
+    if(timePlayed % 10 == 0){
+        enemySpeed += 0.5;
     }
-    else if(timePlayed < 20){
-        diff = 4;
-    }
-    else{
-        diff = 5;
-    }
-
-    return diff;
+    
 }
 
 
