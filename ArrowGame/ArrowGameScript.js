@@ -1,5 +1,8 @@
 // CURRENT OBJECTIVE:
-// change the hiotbox so that it counts as long as the arrow is touching
+// add sounds
+// add backgrounds and effects
+// score and score multipliers (ie combos and streaks)
+// maybe add multi arrows
 
 // Board variables
 let boardHeight = 700;
@@ -72,8 +75,6 @@ window.onload = function(){
     context = board.getContext("2d");
 
     // Add the sprite
-    // context.fillStyle="green";
-    // context.fillRect(spriteX, spriteY, spriteW, spriteH);
     spriteImg = new Image();
     spriteImg.src = sprite.img;
     spriteImg.onload = function(){
@@ -113,6 +114,7 @@ function startGame(){
     requestID = requestAnimationFrame(updateScreen);
     intervalID = setInterval(generateEnemy, 1000);
 
+    // counts the time to adjust difficulty
     setInterval(countTime, 1000);
 }
 
@@ -124,8 +126,6 @@ function updateScreen(){
     context.clearRect(0,0,board.width,board.height);
 
     // redraw sprite
-    // context.fillStyle="green";
-    // context.fillRect(spriteX, spriteY, spriteW, spriteH);
     context.drawImage(spriteImg, sprite.x, sprite.y, sprite.w, sprite.h);
 
     //redraw hitbox
@@ -151,17 +151,16 @@ function updateScreen(){
 
     for (let i = 0; i < enemyArr.length; i++){
         let currEnemy = enemyArr[i];
-        //console.log(currEnemy.img);
+        
         // check if the sprite is leaving the hitbox and should be removed
-        if(!inHitbox(currEnemy)){
+        if(!inBoard(currEnemy)){
             enemyArr.shift();
             misses += 1;
             damageSprite();
             continue;
         }
         currEnemy.y += setDifficulty();
-        //context.fillStyle="red";
-        //context.fillRect(currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
+        
         context.drawImage(currEnemy.img, currEnemy.x, currEnemy.y, currEnemy.w, currEnemy.h);
     }
     
@@ -169,15 +168,6 @@ function updateScreen(){
 
 
 function hitEnemy(e){
-    // get an array of the y coordinates of the enemies
-    // get an array of the directions for the enemies. this will be used to check if the correct key was pressed
-    let coords = [];
-    let arrowDirs = [];
-    for(let i = 0; i < enemyArr.length; i++){
-        coords.push(enemyArr[i].y);
-        arrowDirs.push(enemyArr[i].direction);
-    }
-
     if(e.key == "ArrowLeft"){
         sprite.img = leftImgPlayer;
         spriteImg.src = sprite.img;
@@ -202,22 +192,24 @@ function hitEnemy(e){
 
 
     // check if the first one is inside the hitbox
-    if (coords[0] < spriteY && coords[0] > hitboxY){
+    firstEnemy = enemyArr[0];
+
+    if (firstEnemy.y < spriteY && firstEnemy.y + firstEnemy.h > hitboxY){
         // now check it was the correct key
-        if(e.key == "ArrowLeft" && arrowDirs[0] == "left"){
+        if(e.key == "ArrowLeft" && firstEnemy.direction == "left"){
             //console.log("HIT");
             hits += 1;
             greenhitbox();
         }
-        else if(e.key == "ArrowRight" && arrowDirs[0] == "right"){
+        else if(e.key == "ArrowRight" && firstEnemy.direction == "right"){
             hits += 1;
             greenhitbox();
         }
-        else if(e.key == "ArrowUp" && arrowDirs[0] == "up"){
+        else if(e.key == "ArrowUp" && firstEnemy.direction == "up"){
             hits += 1;
             greenhitbox();
         }
-        else if(e.key == "ArrowDown" && arrowDirs[0] == "down"){
+        else if(e.key == "ArrowDown" && firstEnemy.direction == "down"){
             hits += 1;
             greenhitbox();
         }
@@ -226,13 +218,12 @@ function hitEnemy(e){
             misses += 1;
             damageSprite();
         }
-        coords.shift();
+        
         enemyArr.shift();
         
     }
     else{
         // MISS
-        coords.shift();
         enemyArr.shift();
         misses += 1;
         damageSprite();
@@ -281,7 +272,7 @@ function generateEnemy(){
 
 // Checks whether an enemy is inside the board
 // helper function
-function inHitbox(currEnemy){
+function inBoard(currEnemy){
     if(currEnemy.y < hitboxY + hitboxH){
         return true;
     }
