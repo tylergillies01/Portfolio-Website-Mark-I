@@ -66,6 +66,8 @@ let goodHit = false;
 // tracks how long the game has gone in order to adjust difficulty
 let timePlayed = 0;
 
+let gameOver = false;
+
 window.onload = function(){
     // setup board
     board = document.getElementById("board");
@@ -200,18 +202,26 @@ function hitEnemy(e){
             //console.log("HIT");
             hits += 1;
             greenhitbox();
+
+            playCoinSound();
         }
         else if(e.key == "ArrowRight" && firstEnemy.direction == "right"){
             hits += 1;
             greenhitbox();
+
+            playCoinSound();
         }
         else if(e.key == "ArrowUp" && firstEnemy.direction == "up"){
             hits += 1;
             greenhitbox();
+
+            playCoinSound();
         }
         else if(e.key == "ArrowDown" && firstEnemy.direction == "down"){
             hits += 1;
             greenhitbox();
+
+            playCoinSound();
         }
         else{
             // MISS
@@ -321,6 +331,8 @@ function damageSprite(){
         currentlyDamaged = false;
     }, 300);
     
+
+    playHitSound();
 }
 
 
@@ -355,4 +367,28 @@ function setDifficulty(){
     }
 
     return diff;
+}
+
+
+
+function playCoinSound(){
+    if (!gameOver){
+        var music = document.getElementById("coinSound");
+        music.volume = 0.2;
+        // this makes it reset each time
+        music.currentTime = 0;
+        music.play();
+    }
+    
+}
+
+function playHitSound(){
+    if (!gameOver){
+        var music = document.getElementById("hitSound");
+        music.volume = 0.2;
+        // this makes it reset each time
+        music.currentTime = 0;
+        music.play();
+    }
+    
 }
