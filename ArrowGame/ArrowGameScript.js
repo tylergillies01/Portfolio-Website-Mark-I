@@ -5,7 +5,7 @@
 // 
 
 // Board variables
-let boardHeight = 700;
+let boardHeight = 800;
 let boardWidth = 600;
 let context;
 

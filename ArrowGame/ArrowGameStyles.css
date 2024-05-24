@@ -19,7 +19,7 @@ body {
     border-bottom: 1px solid black;
     
     /* background-image: url("Assets/fantasy-512-x-256_full.png"); */
-
+    background-image: url("Assets/background.png");
 }
 
 #playButton {
