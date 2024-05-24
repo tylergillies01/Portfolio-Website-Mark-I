@@ -267,12 +267,14 @@ function detectCollision(a, b){
 
 // MUSIC
 function pauseMusic() {
+    console.log("Music Stop")
     var music = document.getElementById("backgroundMusic");
     music.pause();
 }
 
 // Play the music
 function playMusic() {
+    console.log("Music Start")
     if (!checkbox.checked && !gameOver){
         var music = document.getElementById("backgroundMusic");
         music.volume = 0.6;
